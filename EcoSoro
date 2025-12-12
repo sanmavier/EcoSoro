@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soro-Eco — Ecossistema de segurança afetiva</title>
+  <style>
+    :root{
+      --bg:#0b0611;
+      --bg2:#12091b;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.12);
+      --text:#f4f2f7;
+      --muted: rgba(244,242,247,.72);
+      --muted2: rgba(244,242,247,.56);
+      --pink:#ff2aa3;
+      --pink2:#ff6bd6;
+      --lime:#50ffa8;
+      --amber:#ffcc66;
+      --red:#ff3b3b;
+      --shadow: 0 20px 70px rgba(0,0,0,.55);
+      --r: 22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 30% -10%, rgba(255,42,163,.30), transparent 60%),
+                  radial-gradient(900px 600px at 110% 10%, rgba(80,255,168,.18), transparent 55%),
+                  radial-gradient(900px 650px at 20% 115%, rgba(255,204,102,.12), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    /* fluid animated blobs */
+    .blob{position:absolute; inset:auto; filter: blur(30px); opacity:.75; transform: translateZ(0); pointer-events:none;}
+    .blob.one{width:520px;height:520px; left:-180px; top:120px; background: radial-gradient(circle at 30% 30%, rgba(255,42,163,.85), rgba(255,107,214,.30) 55%, transparent 70%);
+      animation: float1 13s ease-in-out infinite;}
+    .blob.two{width:620px;height:620px; right:-220px; top:260px; background: radial-gradient(circle at 30% 30%, rgba(80,255,168,.45), rgba(255,42,163,.20) 55%, transparent 72%);
+      animation: float2 16s ease-in-out infinite;}
+    .blob.three{width:520px;height:520px; left:30%; bottom:-260px; background: radial-gradient(circle at 40% 35%, rgba(255,204,102,.35), rgba(255,42,163,.16) 58%, transparent 72%);
+      animation: float3 18s ease-in-out infinite;}
+
+    @keyframes float1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,-30px) scale(1.08)}}
+    @keyframes float2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-55px,40px) scale(1.06)}}
+    @keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-35px) scale(1.10)}}
+
+    .wrap{max-width:1180px; margin:0 auto; padding:26px 20px 90px; position:relative;}
+
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(11,6,17,.75), rgba(11,6,17,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav{
+      max-width:1180px; margin:0 auto; padding:14px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+
+    .brand{display:flex; align-items:center; gap:12px; min-width:200px;}
+
+    .mark{width:42px; height:42px; display:grid; place-items:center;}
+    .mark svg{width:42px;height:42px}
+
+    .brand b{font-size:16px; letter-spacing:.4px}
+    .brand small{display:block; color:var(--muted2); font-weight:500; margin-top:1px}
+
+    .links{display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:flex-end}
+    .links a{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid transparent;
+      transition:.2s ease;
+    }
+    .links a:hover{color:var(--text); border-color:rgba(255,255,255,.14); background:rgba(255,255,255,.05)}
+
+    .ctaRow{display:flex; gap:10px; align-items:center}
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      transition:.2s ease;
+      display:inline-flex; align-items:center; gap:9px;
+    }
+    .btn:hover{background: rgba(255,255,255,.10); border-color:rgba(255,255,255,.18)}
+    .btn.primary{
+      border:none;
+      background: linear-gradient(135deg, rgba(255,42,163,1), rgba(255,107,214,1));
+      box-shadow: 0 18px 50px rgba(255,42,163,.23);
+    }
+    .btn.primary:hover{filter:saturate(1.05) brightness(1.02)}
+    .btn.danger{
+      border:none;
+      background: linear-gradient(135deg, rgba(255,59,59,1), rgba(255,42,163,1));
+      box-shadow: 0 18px 50px rgba(255,59,59,.18);
+    }
+
+    .hero{
+      padding: 54px 0 18px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:28px;
+      align-items:stretch;
+    }
+
+    .hero h1{
+      margin:0 0 12px;
+      font-size:46px;
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+
+    .grad{
+      background: linear-gradient(90deg, var(--pink), var(--pink2), var(--lime));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .hero p{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+      max-width:64ch;
+    }
+
+    .pillrow{display:flex; gap:10px; flex-wrap:wrap; margin: 14px 0 18px}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 10px; border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(244,242,247,.86);
+      font-size:12px;
+    }
+    .dot{width:8px; height:8px; border-radius:99px; background: var(--pink); box-shadow:0 0 0 3px rgba(255,42,163,.18)}
+    .dot.lime{background: var(--lime); box-shadow:0 0 0 3px rgba(80,255,168,.12)}
+    .dot.amber{background: var(--amber); box-shadow:0 0 0 3px rgba(255,204,102,.12)}
+
+    .heroCard{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      min-height: 360px;
+    }
+
+    .heroCard:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(520px 280px at 30% 15%, rgba(255,42,163,.30), transparent 60%),
+        radial-gradient(520px 280px at 80% 55%, rgba(80,255,168,.18), transparent 60%);
+      pointer-events:none;
+    }
+
+    .cardPad{position:relative; padding:18px}
+
+    .searchbar{
+      display:flex; gap:10px; align-items:center;
+      padding:10px; border-radius: 18px;
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .searchbar input{
+      flex:1;
+      border:none; outline:none;
+      background: transparent;
+      color: var(--text);
+      font-size:14px;
+    }
+
+    .kbd{
+      font-size:12px; color: rgba(244,242,247,.75);
+      border: 1px solid rgba(255,255,255,.14);
+      padding:4px 8px;
+      border-radius:10px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .mini{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    .mini .tile{
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .tile h4{margin:0 0 6px; font-size:13px}
+    .tile p{margin:0; color:var(--muted2); font-size:12px; line-height:1.4}
+
+    .badge{
+      position:absolute; top:10px; right:10px;
+      font-size:11px;
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+
+    .badge.pink{color:rgba(255,255,255,.90); border-color:rgba(255,42,163,.35); background: rgba(255,42,163,.14)}
+    .badge.lime{color:rgba(255,255,255,.90); border-color:rgba(80,255,168,.35); background: rgba(80,255,168,.14)}
+    .badge.amber{color:rgba(255,255,255,.90); border-color:rgba(255,204,102,.35); background: rgba(255,204,102,.14)}
+
+    .sectionTitle{
+      margin: 34px 0 12px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .sectionTitle h2{margin:0; font-size:18px; letter-spacing:.2px}
+    .sectionTitle span{color:var(--muted2); font-size:13px}
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .iconCard{
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      padding: 14px;
+      transition:.2s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .iconCard:hover{transform: translateY(-2px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18)}
+
+    .iconTop{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .ico{
+      width:42px;height:42px;
+      border-radius: 16px;
+      display:grid; place-items:center;
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .iconCard h3{margin:10px 0 4px; font-size:14px}
+    .iconCard p{margin:0; font-size:12px; color:var(--muted2); line-height:1.45}
+
+    .tag{
+      font-size:11px;
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      color:rgba(244,242,247,.82);
+    }
+    .tag.pink{border-color:rgba(255,42,163,.35); background: rgba(255,42,163,.12)}
+    .tag.red{border-color:rgba(255,59,59,.35); background: rgba(255,59,59,.12)}
+    .tag.lime{border-color:rgba(80,255,168,.35); background: rgba(80,255,168,.12)}
+
+    .panelRow{display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px}
+    .panel{
+      border-radius: 22px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      padding: 16px;
+    }
+
+    .panel h3{margin:0 0 8px; font-size:14px}
+    .panel p{margin:0 0 12px; font-size:12px; color:var(--muted2); line-height:1.45}
+
+    .switches{display:flex; gap:10px; flex-wrap:wrap}
+    .switch{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size:12px;
+      color: rgba(244,242,247,.86);
+      cursor:pointer;
+      user-select:none;
+    }
+    .switch input{accent-color: var(--pink)}
+
+    footer{
+      margin-top:38px;
+      padding-top:18px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: var(--muted2);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    /* responsive */
+    @media (max-width: 980px){
+      .hero{grid-template-columns: 1fr;}
+      .grid{grid-template-columns: repeat(2, 1fr)}
+      .panelRow{grid-template-columns:1fr}
+      .links{display:none}
+      .brand{min-width:auto}
+      .hero h1{font-size:40px}
+    }
+    @media (max-width: 520px){
+      .grid{grid-template-columns: 1fr}
+      .hero h1{font-size:34px}
+      .mini{grid-template-columns:1fr}
+    }
+
+    /* subtle animated gradient line */
+    .shine{
+      position:absolute; inset:-2px;
+      background: linear-gradient(90deg, transparent, rgba(255,42,163,.35), rgba(80,255,168,.18), transparent);
+      transform: translateX(-60%);
+      animation: sweep 8s linear infinite;
+      opacity:.55;
+      pointer-events:none;
+      mask: linear-gradient(#000, transparent 75%);
+    }
+    @keyframes sweep{0%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
+  </style>
+</head>
+<body>
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+  <div class="blob three"></div>
+
+  <header>
+    <div class="nav">
+      <div class="brand" aria-label="Marca Soro-Eco">
+        <div class="mark" title="Soro-Eco">
+          <!-- Logo inspirado no seu símbolo (gota + coração) -->
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M32 6C26.5 14.1 14 27.2 14 39.4C14 51 22.9 58 32 58C41.1 58 50 51 50 39.4C50 27.3 37.6 14.1 32 6Z" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
+            <path d="M22 35.2c0-5.1 4.1-9.2 9.2-9.2c2.5 0 4.7 1 6.3 2.6c1.6-1.6 3.8-2.6 6.3-2.6c5.1 0 9.2 4.1 9.2 9.2c0 8-7.8 13.8-15.5 17.7c-7.7-3.9-15.5-9.7-15.5-17.7Z" fill="url(#g)" opacity="0.95"/>
+            <defs>
+              <linearGradient id="g" x1="18" y1="20" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff2aa3"/>
+                <stop offset=".5" stop-color="#ff6bd6"/>
+                <stop offset="1" stop-color="#50ffa8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <b>Soro-Eco</b>
+          <small>segurança afetiva • dados • cuidado</small>
+        </div>
+      </div>
+
+      <nav class="links" aria-label="Navegação">
+        <a href="#manifesto">Manifesto</a>
+        <a href="#sobre">Sobre nós</a>
+        <a href="#apoio">Apoio jurídico</a>
+        <a href="#casa">Casa Segura</a>
+      </nav>
+
+      <div class="ctaRow">
+        <button class="btn danger" onclick="alert('Em um produto real, este botão acionaria fluxos de emergência (ex.: contatos, geolocalização, central 24h).')">
+          <!-- siren icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2v3" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 6l2 2" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M20 6l-2 2" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6 20h12" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 20v-6a5 5 0 0 1 10 0v6" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 14h6" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Botão de pânico
+        </button>
+        <button class="btn primary" onclick="document.getElementById('capivara').scrollIntoView({behavior:'smooth'})">
+          <!-- search icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M10.5 18a7.5 7.5 0 1 1 0-15a7.5 7.5 0 0 1 0 15Z" stroke="rgba(255,255,255,.95)" stroke-width="2"/>
+            <path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,.95)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Puxar a capivara
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" aria-label="Hero">
+      <div>
+        <h1>
+          Um <span class="grad">soro digital</span> contra golpes, abuso e medo.
+        </h1>
+        <p>
+          O <b>Soro-Eco</b> conecta instituições, tecnologia e informações públicas para ajudar mulheres a conhecerem parceiros com
+          mais segurança — social, legal e emocional — sem perder o humor, a esperança e o direito de viver relações saudáveis.
+        </p>
+
+        <div class="pillrow" aria-label="Diferenciais">
+          <span class="pill"><span class="dot"></span>Checagem sigilosa</span>
+          <span class="pill"><span class="dot lime"></span>Score positivo (Pink-List)</span>
+          <span class="pill"><span class="dot amber"></span>Risco & alertas</span>
+        </div>
+
+        <div class="ctaRow" style="margin-top:10px">
+          <button class="btn primary" onclick="document.getElementById('capivara').scrollIntoView({behavior:'smooth'})">
+            Começar checagem
+          </button>
+          <button class="btn" onclick="document.getElementById('historia').scrollIntoView({behavior:'smooth'})">
+            Contar minha história
+          </button>
+        </div>
+
+        <p style="margin-top:14px; color:rgba(244,242,247,.55); font-size:12px; max-width:72ch">
+          *Protótipo visual. Em um produto real, qualquer uso de dados deve respeitar LGPD, devido processo legal,
+          prevenção a falsas acusações e mecanismos robustos de verificação, contestação e moderação.
+        </p>
+      </div>
+
+      <aside class="heroCard" aria-label="Painel de ações">
+        <div class="shine"></div>
+        <div class="cardPad">
+          <div class="searchbar" id="capivara" role="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M10.5 18a7.5 7.5 0 1 1 0-15a7.5 7.5 0 0 1 0 15Z" stroke="rgba(255,255,255,.85)" stroke-width="2"/>
+              <path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input placeholder="Puxando a capivara (CPF/Nome/Telefone) — checagem sigilosa" aria-label="Campo de checagem" />
+            <span class="kbd">Enter</span>
+          </div>
+
+          <div class="mini">
+            <div class="tile">
+              <span class="badge lime">Pink-List</span>
+              <h4>Score positivo</h4>
+              <p>Reputação validada por fontes, sinais de consistência e histórico saudável.</p>
+            </div>
+            <div class="tile">
+              <span class="badge" style="border-color:rgba(255,255,255,.14)">Risco</span>
+              <h4>Alertas & padrões</h4>
+              <p>Indicadores de golpe, inconsistências e sinais de abuso a partir de dados cruzados.</p>
+            </div>
+            <div class="tile">
+              <span class="badge pink">Sigilo</span>
+              <h4>Checagem discreta</h4>
+              <p>Consulta protegida para você decidir com mais clareza e autonomia.</p>
+            </div>
+            <div class="tile">
+              <span class="badge amber">Rede</span>
+              <h4>Ecossistema vivo</h4>
+              <p>Instituições, apoio jurídico, abrigos e comunidade conectados.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="sectionTitle">
+      <h2>Atalhos do ecossistema</h2>
+      <span>ícones + funções principais</span>
+    </div>
+
+    <section class="grid" aria-label="Ícones principais">
+      <!-- Saúde -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21s-7-4.6-9.2-9.3C1 8 3.2 5 6.5 5c1.9 0 3.6 1 4.5 2.4C11.9 6 13.6 5 15.5 5C18.8 5 21 8 21.2 11.7C19 16.4 12 21 12 21Z" stroke="rgba(255,255,255,.86)" stroke-width="2"/>
+              <path d="M12 8v6" stroke="#50ffa8" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 11h6" stroke="#50ffa8" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag lime">Saúde</span>
+        </div>
+        <h3>Saúde</h3>
+        <p>Informação e suporte para escolhas seguras, autocuidado e prevenção.</p>
+      </article>
+
+      <!-- Sexo -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21s-6.7-4.4-9-8.9C1.3 8.3 3.4 6 6.6 6c1.9 0 3.6 1 4.4 2.4C11.8 7 13.5 6 15.4 6c3.2 0 5.3 2.3 3.6 6.1C18.7 16.6 12 21 12 21Z" fill="rgba(255,42,163,.14)" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M9 12.3c1.4 1.4 4.6 1.4 6 0" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag pink">Sexo</span>
+        </div>
+        <h3>Sexo</h3>
+        <p>Consentimento, proteção e educação: prazer com segurança e respeito.</p>
+      </article>
+
+      <!-- Legal -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3v18" stroke="rgba(255,255,255,.86)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M6 7h12" stroke="rgba(255,255,255,.86)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 7l-3 6a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3L7 7Z" fill="rgba(255,204,102,.14)" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M17 7l-3 6a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3l-3-6Z" fill="rgba(255,204,102,.14)" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+            </svg>
+          </div>
+          <span class="tag">Legal</span>
+        </div>
+        <h3>Legal</h3>
+        <p>Guia prático: medidas protetivas, registros, direitos e como agir.</p>
+      </article>
+
+      <!-- Pink List -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 11l3 3 7-7" stroke="#50ffa8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+            </svg>
+          </div>
+          <span class="tag lime">Pink-List</span>
+        </div>
+        <h3>Pink-List (Score)</h3>
+        <p>Score positivo: sinais de confiabilidade, consistência e histórico saudável.</p>
+      </article>
+
+      <!-- Black List -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M8 8l8 8" stroke="#ff3b3b" stroke-width="2" stroke-linecap="round"/>
+              <path d="M16 8l-8 8" stroke="#ff3b3b" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag red">Black-List</span>
+        </div>
+        <h3>Black-List</h3>
+        <p>Gente a ser evitada: alertas fortes, padrões graves e riscos iminentes.</p>
+      </article>
+
+      <!-- Saúde Mental -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21c4.4 0 8-3.6 8-8.1C20 7.6 16.4 4 12 4S4 7.6 4 12.9C4 17.4 7.6 21 12 21Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M8 13c1.2 1.2 2.4 1.8 4 1.8s2.8-.6 4-1.8" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 10h.01M15 10h.01" stroke="rgba(255,255,255,.85)" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag pink">Saúde Mental</span>
+        </div>
+        <h3>Saúde Mental</h3>
+        <p>Apoio emocional, rede de profissionais e rotas de cuidado pós-trauma.</p>
+      </article>
+
+      <!-- Conte sua história -->
+      <article class="iconCard" id="historia">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 5h16v10H7l-3 3V5Z" stroke="rgba(255,255,255,.82)" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M8 9h8" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+              <path d="M8 12h6" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag">Relato</span>
+        </div>
+        <h3>Conte sua história</h3>
+        <p>Envie um depoimento com segurança. Você escolhe: identificada ou anônima.</p>
+      </article>
+
+      <!-- Puxando a capivara -->
+      <article class="iconCard">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 3h10v18H7V3Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M9 7h6" stroke="#50ffa8" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 11h6" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 15h4" stroke="#ffcc66" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag">Checagem</span>
+        </div>
+        <h3>Puxando a capivara</h3>
+        <p>Checagem de dados sigilosa: sinais legais, sociais e padrões de risco.</p>
+      </article>
+
+      <!-- Sobre nós -->
+      <article class="iconCard" id="sobre">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 12a4 4 0 1 0-4-4a4 4 0 0 0 4 4Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M4 21a8 8 0 0 1 16 0" stroke="rgba(255,255,255,.82)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag">Sobre nós</span>
+        </div>
+        <h3>Sobre nós</h3>
+        <p>Quem sustenta o ecossistema: instituições, especialistas e comunidade.</p>
+      </article>
+
+      <!-- Manifesto -->
+      <article class="iconCard" id="manifesto">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 3h12v18H8a2 2 0 0 1-2-2V3Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M9 7h6" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 11h6" stroke="#50ffa8" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 15h5" stroke="#ffcc66" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag">Manifesto</span>
+        </div>
+        <h3>Manifesto</h3>
+        <p>Por que existimos: sororidade, dados e cuidado como tecnologia social.</p>
+      </article>
+
+      <!-- Apoio jurídico -->
+      <article class="iconCard" id="apoio">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10c-4.6-.6-8-5-8-10V6l8-4Z" stroke="rgba(255,255,255,.82)" stroke-width="2"/>
+              <path d="M9.5 12.2l1.7 1.7L14.6 10" stroke="#50ffa8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="tag">Apoio Jurídico</span>
+        </div>
+        <h3>Apoio Jurídico</h3>
+        <p>Orientação e conexão com defensorias, advogadas e medidas protetivas.</p>
+      </article>
+
+      <!-- Casa Segura -->
+      <article class="iconCard" id="casa">
+        <div class="iconTop">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 11l9-8 9 8v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V11Z" stroke="rgba(255,255,255,.82)" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M9 21v-7h6v7" stroke="#ff6bd6" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="tag">Casa Segura</span>
+        </div>
+        <h3>Casa Segura</h3>
+        <p>Rotas de acolhimento: abrigos, rede de proteção e recursos de emergência.</p>
+      </article>
+    </section>
+
+    <section class="panelRow" aria-label="Ações rápidas">
+      <div class="panel">
+        <h3>Conte sua história (modo)</h3>
+        <p>Você escolhe como compartilhar: identificada (para verificação mais forte) ou anônima (para proteção).</p>
+        <div class="switches" role="group" aria-label="Modo de relato">
+          <label class="switch"><input type="radio" name="modo" checked> Anônima</label>
+          <label class="switch"><input type="radio" name="modo"> Identificada</label>
+          <button class="btn" style="padding:9px 12px" onclick="alert('Protótipo: aqui abriria um formulário com verificação e moderação.')">Abrir formulário</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Botão de pânico</h3>
+        <p>Atalho de segurança: acione ajuda, registre evidências e compartilhe localização com contatos confiáveis.</p>
+        <div class="switches">
+          <button class="btn danger" onclick="alert('Protótipo: em produção, acionaria um fluxo real de emergência.')">Acionar agora</button>
+          <button class="btn" onclick="alert('Protótipo: configurar contatos, palavra-código e rotas seguras.')">Configurar</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> Soro-Eco. Ecossistema de cuidado e transparência.</div>
+      <div>Privacidade • LGPD • Termos • Contato</div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
